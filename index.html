@@ -1,259 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Momentum Computer Center</title>
-
-  <!-- INTERNAL CSS -->
-  <style>
-    .dark{
-  color:#052858;   /* dark & professional */
-  opacity:1;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentum Institute</title>
+<style>
+:root{
+  --primary:#00b4ff;
+  --dark:#050505;
+  --card:#111;
+  --text:#e5e7eb;
 }
-header p{
-  color:#64748b;
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Segoe UI,Arial;background:var(--dark);color:var(--text);}
+
+/* HEADER */
+header{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(135deg,#000,#0a0a0a);
+}
+header h1{font-size:3rem;letter-spacing:2px;border-bottom:3px solid var(--primary);display:inline-block;padding-bottom:10px;}
+header p{margin-top:15px;opacity:.8}
+
+/* NAVBAR */
+nav{
+  position:sticky;
+  top:0;
+  background:#000;
+  padding:14px;
+  z-index:999;
+  text-align:center;
+  border-bottom:1px solid #222;
+}
+nav a{
+  color:#fff;
+  margin:0 14px;
+  text-decoration:none;
+  font-weight:600;
+  position:relative;
+}
+nav a.active::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:-5px;
+  width:100%;
+  height:2px;
+  background:var(--primary);
 }
 
-    :root{
-      --primary:#0b5ed7;
-      --secondary:#083d8c;
-      --dark:#0a2540;
-      --light:#f4f6f8;
-    }
+/* SECTIONS */
+section{
+  max-width:1100px;
+  margin:70px auto;
+  background:var(--card);
+  padding:50px 40px;
+  border-radius:18px;
+  box-shadow:0 0 25px rgba(0,180,255,.15);
+}
+h2{color:var(--primary);margin-bottom:15px;}
+.explain-btn{
+  margin-top:18px;
+  padding:10px 26px;
+  border:none;
+  border-radius:30px;
+  background:var(--primary);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+.explain-btn:hover{transform:scale(1.05);}
 
-    *{margin:0;padding:0;box-sizing:border-box;}
+/* COURSES */
+.courses{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.courses li{
+  background:#000;
+  padding:20px;
+  border-radius:12px;
+  text-align:center;
+}
 
-    body{
-      font-family:'Segoe UI',Tahoma,sans-serif;
-      background:#f5f7fb;
-      color:#222;
-      scroll-behavior:smooth;
-    }
+/* ADMIN LOGIN */
+#loginBox{
+  max-width:400px;
+  margin:40px auto;
+  background:#000;
+  padding:30px;
+  border-radius:14px;
+  display:none;
+}
+#loginBox input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+}
+#loginBox button{
+  width:100%;
+  padding:12px;
+  background:var(--primary);
+  border:none;
+  font-weight:bold;
+}
 
-    /* ===== HEADER / HOME ===== */
-    header{
-      min-height:100vh;
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      color:#fff;
-      padding:20px;
-    }
+/* ADMIN PANEL */
+#adminPanel{
+  display:none;
+  max-width:1100px;
+  margin:50px auto;
+  background:#000;
+  padding:40px;
+  border-radius:18px;
+}
 
-    #home h1{
-      font-size:3rem;
-      margin-bottom:15px;
-      color:#64748b; /* final dark professional slate */
-      text-shadow:0 1px 1px rgba(0,0,0,0.2);
-      letter-spacing:0.4px;
-    }
-    #home p{font-size:1.2rem;opacity:0.95;}
+/* AI CHAT BOX - ALWAYS OPEN */
+#aiChat{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:250px;
+  border-radius:12px;
+  background:var(--card);
+  box-shadow:0 0 20px rgba(0,180,255,.3);
+  overflow:hidden;
+  z-index:9999;
+  font-size:13px;
+  display:flex;
+  flex-direction:column;
+}
+#aiChat header{
+  background:var(--primary);
+  color:#000;
+  padding:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+#aiChat .body{
+  padding:5px;
+  height:150px;
+  overflow:auto;
+  flex:1;
+}
+#aiChat input{
+  width:100%;
+  padding:6px;
+  border:none;
+  outline:none;
+  background:#111;
+  color:#fff;
+  display:block;
+  font-size:13px;
+}
 
-    /* ===== NAVBAR ===== */
-    nav{
-      position:sticky;
-      top:0;
-      background:var(--secondary);
-      padding:14px 10px;
-      text-align:center;
-      z-index:1000;
-    }
-
-    nav a{
-      color:#fff;
-      margin:0 14px;
-      text-decoration:none;
-      font-weight:600;
-    }
-
-    nav a.active{ text-decoration:underline; }
-
-    /* ===== SECTIONS ===== */
-    section{
-      max-width:1100px;
-      margin:70px auto;
-      padding:60px 40px;
-      background:#fff;
-      border-radius:18px;
-      box-shadow:0 15px 35px rgba(0,0,0,0.1);
-    }
-
-    h2{font-size:2.2rem;color:var(--primary);margin-bottom:20px;}
-    p{font-size:1.05rem;line-height:1.7;}
-
-    /* ===== BUTTON ===== */
-    .btn{
-      display:inline-block;
-      margin-top:25px;
-      padding:14px 38px;
-      border-radius:40px;
-      background:var(--primary);
-      color:#fff;
-      text-decoration:none;
-      font-weight:bold;
-      transition:0.3s;
-    }
-
-    .btn:hover{ background:var(--secondary); }
-
-    /* ===== COURSES ===== */
-    .courses{
-      list-style:none;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:20px;
-    }
-
-    .courses li{
-      background:#f0f4ff;
-      padding:22px;
-      border-radius:14px;
-      text-align:center;
-      font-weight:600;
-    }
-
-    /* ===== WHATSAPP BUTTON ===== */
-    .whatsapp-float{
-      position:fixed;
-      bottom:25px;
-      right:25px;
-      width:60px;
-      height:60px;
-      background:#25D366;
-      color:#fff;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:30px;
-      text-decoration:none;
-      box-shadow:0 10px 25px rgba(0,0,0,0.3);
-      z-index:999;
-    }
-
-    .whatsapp-float:hover{ transform:scale(1.1); }
-
-    /* ===== FOOTER ===== */
-    footer{
-      background:linear-gradient(135deg,var(--dark),var(--secondary));
-      color:#fff;
-      text-align:center;
-      padding:28px 15px;
-      margin-top:60px;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media(max-width:768px){
-      #home h1{font-size:2.2rem;}
-      section{margin:50px 15px;padding:40px 25px;}
-      nav a{display:inline-block;margin:8px;}
-    }
-  </style>
+/* Responsive */
+@media(max-width:768px){
+  #aiChat{width:200px;}
+  section{margin:50px 15px;padding:40px 25px;}
+  nav a{margin:5px;}
+}
+</style>
 </head>
 <body>
 
-<!-- HOME -->
 <header>
-  <section id="home">
-    <h1>Momentum Institute of Information Technology and Management</h1>
-    <p class="dark">Momentum Computer Center – Computer Education for a Better Future</p>
-  </section>
+  <h1>Momentum Institute of Information Technology and Management</h1>
+  <p>Momentum Computer Center – Computer Education for a Better Future</p>
 </header>
 
-<!-- NAV -->
 <nav>
-  <a href="#home">Home</a>
-  <a href="#about">About</a>
+  <a href="#about" class="active">About</a>
   <a href="#courses">Courses</a>
   <a href="#admission">Admission</a>
   <a href="#payment">Payment</a>
   <a href="#contact">Contact</a>
+  <a href="javascript:showLogin()">Admin</a>
 </nav>
 
-<!-- ABOUT -->
 <section id="about">
-  <h2>About Us</h2>
-  <p>Momentum Computer Center provides quality computer education with practical training and experienced teachers. Our goal is to make students confident and job-ready.</p>
+<h2>About Us</h2>
+<p>Momentum Computer Center provides quality computer education with practical training.</p>
+<button class="explain-btn" onclick="speak('यह संस्थान छात्रों को कंप्यूटर शिक्षा और प्रैक्टिकल ट्रेनिंग प्रदान करता है जिससे वे जॉब के लिए तैयार हो सकें')">Explain</button>
 </section>
 
-<!-- COURSES -->
 <section id="courses">
-  <h2>Our Courses</h2>
-  <ul class="courses">
-    <li>Programming Languages</li>
-    <li>Typing (Hindi & English)</li>
-    <li>DCA / ADCA</li>
-    <li>Tally with GST</li>
-    <li>MS Office & Advanced Excel</li>
-    <li>Corel Draw</li>
-  </ul>
+<h2>Our Courses</h2>
+<ul class="courses">
+<li>Programming Languages</li>
+<li>Typing Hindi & English</li>
+<li>DCA / ADCA</li>
+<li>Tally with GST</li>
+<li>MS Office & Excel</li>
+<li>Corel Draw</li>
+</ul>
+<button class="explain-btn" onclick="speak('यहाँ प्रोग्रामिंग, टाइपिंग, टैली, और ऑफिस से जुड़े सभी कोर्स उपलब्ध हैं')">Explain</button>
 </section>
 
-<!-- ADMISSION -->
 <section id="admission">
-  <h2>Admission</h2>
-  <p>Admissions are open for all courses.</p>
-  <p><strong>Documents Required:</strong> Aadhar Card, 2 Passport Size Photos</p>
-  <a href="#contact" class="btn">Apply for Admission</a>
+<h2>Admission</h2>
+<p>Admissions are open for all courses.</p>
+<button class="explain-btn" onclick="speak('एडमिशन के लिए आधार कार्ड और दो फोटो की आवश्यकता होती है')">Explain</button>
 </section>
 
-<!-- PAYMENT -->
 <section id="payment">
-  <h2>Fee & Payment</h2>
-  <ul class="courses">
-    <li>Cash (At Institute)</li>
-    <li>UPI (Google Pay / PhonePe / Paytm)</li>
-    <li>Bank Transfer</li>
-  </ul>
+<h2>Fee & Payment</h2>
+<ul class="courses">
+<li>Cash</li>
+<li>UPI</li>
+<li>Bank Transfer</li>
+</ul>
+<button class="explain-btn" onclick="speak('फीस कैश, यूपीआई या बैंक ट्रांसफर से जमा की जा सकती है')">Explain</button>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
-  <h2>Contact Us</h2>
-  <p><strong>Address:</strong> Pratibha Colony, Aligarh (Near Banna Devi Thana)</p>
-  <p><strong>Phone:</strong> 9458510270</p>
+<h2>Contact</h2>
+<p>Address: Pratibha Colony, Aligarh</p>
+<p>Phone: 9458510270</p>
+<button class="explain-btn" onclick="speak('आप हमें अलीगढ़ में संपर्क कर सकते हैं या फोन नंबर पर कॉल कर सकते हैं')">Explain</button>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <p>© 2025 Momentum Computer Center | All Rights Reserved</p>
-</footer>
+<!-- ADMIN LOGIN -->
+<div id="loginBox">
+<h2>Admin Login</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
 
-<!-- WHATSAPP -->
-<a class="whatsapp-float" href="https://wa.me/919458510270?text=Hello%20I%20want%20admission%20details%20from%20Momentum%20Computer%20Center" target="_blank">💬</a>
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+<h2>Admin Panel Dashboard</h2>
+<p>Admissions & Fees Database Connected (Demo)</p>
+</div>
 
-<!-- INTERNAL JS -->
+<!-- AI CHAT -->
+<!-- <div id="aiChat">
+<header onclick="toggleChat()">AI Assistant</header>
+<div class="body" id="chatBody">नमस्ते! मैं आपकी सहायता के लिए हूँ।</div>
+<input id="chatInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){askAI(this.value);this.value=''}">
+</div> -->
+
 <script>
-  const navLinks = document.querySelectorAll('nav a');
-  const sections = document.querySelectorAll('section');
+function speak(text){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='hi-IN';
+  u.rate=0.8;
+  u.pitch=1;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
 
-  // Smooth scroll
-  navLinks.forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if(target){ target.scrollIntoView({behavior:'smooth'}); }
-    });
-  });
+// WELCOME
+window.onload=()=>{speak("स्वागत है मोमेंटम इंस्टीट्यूट ऑफ इंफॉर्मेशन टेक्नोलॉजी एंड मैनेजमेंट में");}
 
-  // Active menu on scroll
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-      if(window.scrollY >= section.offsetTop - 120){
-        current = section.id;
-      }
-    });
-    navLinks.forEach(link => {
-      link.classList.remove('active');
-      if(link.getAttribute('href') === '#' + current){
-        link.classList.add('active');
-      }
-    });
-  });
+// ADMIN LOGIN
+function showLogin(){
+  document.getElementById('loginBox').style.display='block';
+  window.scrollTo(0,document.body.scrollHeight);
+}
+function login(){
+  const u=document.getElementById('user').value;
+  const p=document.getElementById('pass').value;
+  if(u==="admin" && p==="1987"){
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    speak("Hello Kapil Sir, I am AI assistant for this website made by Lavitra");
+  } else {
+    speak("गलत यूज़रनेम या पासवर्ड");
+  }
+}
+
+// TOGGLE AI CHAT (EXPAND/COLLAPSE)
+function toggleChat(){
+  const body=document.querySelector("#aiChat .body");
+  const input=document.querySelector("#chatInput");
+  if(body.style.display==='none'){
+    body.style.display='block';
+    input.style.display='block';
+  } else{
+    body.style.display='block';
+    input.style.display='block';
+  }
+}
+
+// AI CHAT FUNCTION
+function askAI(q){
+  if(!q) return;
+  const box=document.getElementById('chatBody');
+  box.innerHTML+="<br><b>आप:</b> "+q;
+  let ans="मैं आपकी सहायता कर सकती हूँ।";
+  const msg=q.toLowerCase();
+  if(msg.includes("who made you")) ans="I was made by Lavitra";
+  else if(msg.includes("who is the director")) ans="Kapil Dev Sharma is the owner/admin of this website";
+  else if(msg.includes("courses")) ans="हमारे कोर्सेज में Programming, Typing, DCA, Tally, MS Office, Corel Draw शामिल हैं।";
+  else if(msg.includes("admission")) ans="एडमिशन सभी पाठ्यक्रमों के लिए खुले हैं।";
+  else if(msg.includes("payment") || msg.includes("fees")) ans="फीस कैश, यूपीआई या बैंक ट्रांसफर से जमा की जा सकती है।";
+  box.innerHTML+="<br><b>AI:</b> "+ans;
+  speak(ans);
+  box.scrollTop=box.scrollHeight;
+}
+
+// NAVBAR ACTIVE
+const navLinks=document.querySelectorAll('nav a');
+const sections=document.querySelectorAll('section');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120) current=s.id;});
+  navLinks.forEach(l=>{l.classList.remove('active'); if(l.getAttribute('href')=='#'+current) l.classList.add('active');});
+});
 </script>
 
 </body>
