@@ -213,26 +213,6 @@ form button:hover{background:var(--hover);}
   color:#fff;
 }
 
-/* LOGIN MODAL */
-#loginModal{
-  display:none; /* hide by default for normal users */
-  position:fixed;
-  top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.85);
-  display:flex; justify-content:center; align-items:center;
-  z-index:1000;
-}
-#loginModal form{
-  background:#111; padding:30px; border-radius:12px; text-align:center;
-}
-#loginModal input{
-  display:block; width:200px; margin:10px auto; padding:10px; border-radius:8px; border:none;
-}
-#loginModal button{
-  padding:10px 20px; border-radius:8px; border:none; background:var(--primary); cursor:pointer; font-weight:bold;
-}
-#loginModal button:hover{background:var(--hover);}
-
 /* AI CHATBOX */
 #aiChat{
   position:fixed;
@@ -340,15 +320,6 @@ form button:hover{background:var(--hover);}
 
 <section id="admin">
 <h2>Admin Section</h2>
-<div id="loginModal">
-  <!-- <form id="loginForm">
-    <h3>Admin Login</h3>
-    <input type="text" id="username" placeholder="Username" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form> -->
-</div>
-
 <div id="adminPanel">
   <h3>Enrollments</h3>
   <table>
@@ -361,7 +332,7 @@ form button:hover{background:var(--hover);}
 </section>
 
 <section id="contact">
-<h2>Contact Us</h2>
+<h2>Contact / Enroll</h2>
 <p>Address: Pratibha Colony, Aligarh</p>
 <p>Phone: 9458510270</p>
 <form id="contactForm">
@@ -384,7 +355,10 @@ form button:hover{background:var(--hover);}
 </div>
 
 <script>
-// ----------------- TTS -----------------
+// ----------- WhatsApp Number ------------
+const WHATSAPP_NUMBER = "919458510270"; // Papa ka number (India, no +)
+
+// ----------- TTS -----------
 function speak(text){
   const u = new SpeechSynthesisUtterance(text);
   u.lang='hi-IN'; u.rate=0.7; u.pitch=1;
@@ -406,57 +380,8 @@ window.addEventListener('scroll',()=> {
   navLinks.forEach(l=>{l.classList.remove('active'); if(l.getAttribute('href')=='#'+current) l.classList.add('active');});
 });
 
-// Enroll
+// ----------- Enrollments & Contact form -----------
 const enrollments=[];
-function enroll(course){
-  alert("You clicked enroll for: "+course);
-  document.getElementById('contact').scrollIntoView({behavior:'smooth'});
-}
-
-// Contact form
-document.getElementById('contactForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  const form = e.target;
-  const entry = {name: form.name.value, phone: form.phone.value, email: form.email.value, course: form.course.value};
-  enrollments.push(entry);
-  alert("Thank you! Your enrollment is submitted.");
-  form.reset();
-  updateAdminTable();
-});
-
-// Admin Login
-const adminLink = document.querySelector('nav a[href="#admin"]');
-const loginModal = document.getElementById('loginModal');
-const adminPanel = document.getElementById('adminPanel');
-loginModal.style.display='none';
-adminPanel.style.display='none';
-const adminSecretKey = "lavitraAdmin";
-
-adminLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const key = prompt("Enter admin secret key:");
-    if (key === adminSecretKey) {
-        loginModal.style.display='flex';
-    } else {
-        alert("You are not authorized!");
-    }
-});
-
-// Login
-// const loginForm = document.getElementById('loginForm');
-// loginForm.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const user = document.getElementById('username').value;
-//   const pass = document.getElementById('password').value;
-//   if(user==='admin' && pass==='1234'){
-//     loginModal.style.display='none';
-//     adminPanel.style.display='block';
-//     speak("Hello Kapil Sir, I am AI for this website made by Lavitra");
-//   } else {
-//     alert("Incorrect username or password!");
-//   }
-// });
-
 function updateAdminTable(){
   const tbody = document.getElementById('enrollTable');
   tbody.innerHTML='';
@@ -467,19 +392,56 @@ function updateAdminTable(){
   });
 }
 
-// AI Chat
+function enroll(course){
+  document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+  document.querySelector('#contactForm textarea').value = course;
+  speak("आप " + course + " के लिए नामांकन फॉर्म भर सकते हैं।");
+}
+
+// Contact form with WhatsApp message
+document.getElementById('contactForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const phone = form.phone.value;
+  const email = form.email.value;
+  const course = form.course.value;
+
+  // Save for admin
+  enrollments.push({name, phone, email, course});
+  updateAdminTable();
+
+  // WhatsApp message
+  const message =
+`📌 *New Admission Enquiry*
+👤 Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
+📚 Course: ${course}`;
+
+  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
+  speak("आपका मैसेज व्हाट्सएप पर भेजा जा रहा है");
+
+  form.reset();
+});
+
+// ----------- AI Chat -----------
 const aiChatBody = document.getElementById('aiChatBody');
-const aiChatInput = document.getElementById('aiChatInput');
 const aiInput = document.getElementById('aiInput');
 document.getElementById('aiChatHeader').addEventListener('click',()=> {
-  if(aiChatBody.style.display==='none'){aiChatBody.style.display='block'; aiChatInput.style.display='flex';}
-  else{aiChatBody.style.display='none'; aiChatInput.style.display='none';}
+  if(aiChatBody.style.display==='none'){aiChatBody.style.display='block'; aiInput.parentElement.style.display='flex';}
+  else{aiChatBody.style.display='none'; aiInput.parentElement.style.display='none';}
 });
 function sendAI(){
   const text = aiInput.value.toLowerCase();
   if(!text) return;
   addAIMessage("You: "+aiInput.value);
-  setTimeout(()=>{addAIMessage("AI: "+getAIReply(text));},500);
+  setTimeout(()=>{
+    const reply = getAIReply(text);
+    addAIMessage("AI: "+reply);
+    speak(reply);
+  },500);
   aiInput.value='';
 }
 function addAIMessage(msg){
@@ -499,16 +461,14 @@ function getAIReply(text){
   return "Sorry, I can only answer about courses, payment, admission, contact, owner, or who made me";
 }
 
-// ----------------- PARTICLES -----------------
+// ----------- Particles -----------
 const headerElem = document.querySelector('header');
 const particleCount = 30;
 const particles = [];
-
-// Create particles
 for(let i=0; i<particleCount; i++){
   const p = document.createElement('div');
   p.classList.add('particle');
-  const size = Math.random() * 6 + 4; // 4px to 10px
+  const size = Math.random() * 6 + 4;
   p.style.width = size + 'px';
   p.style.height = size + 'px';
   p.style.left = Math.random() * window.innerWidth + 'px';
@@ -522,25 +482,18 @@ for(let i=0; i<particleCount; i++){
     vy: (Math.random() - 0.5) * 0.5
   });
 }
-
-// Animate particles
 function animateParticles() {
   particles.forEach(p => {
     p.x += p.vx;
     p.y += p.vy;
-
-    // Bounce off edges
     if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
     if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
-
     p.el.style.left = p.x + 'px';
     p.el.style.top = p.y + 'px';
   });
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
-
-// Mouse interaction: repel particles slightly from mouse
 document.addEventListener('mousemove', (e) => {
   const mouseX = e.clientX;
   const mouseY = e.clientY;
@@ -548,6 +501,7 @@ document.addEventListener('mousemove', (e) => {
     const dx = p.x - mouseX;
     const dy = p.y - mouseY;
     const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 100)
     if (dist < 100) { // only repel if close
       p.vx += dx * 0.0005;
       p.vy += dy * 0.0005;
@@ -555,7 +509,7 @@ document.addEventListener('mousemove', (e) => {
   });
 });
 
-// Optional: adjust particles on window resize
+// Adjust particles on window resize
 window.addEventListener('resize', () => {
   particles.forEach(p => {
     if (p.x > window.innerWidth) p.x = Math.random() * window.innerWidth;
