@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentum Institute</title>
+<style>
+:root{
+  --primary:#00b4ff;
+  --secondary:#0a192f;
+  --card:#111;
+  --text:#e5e7eb;
+  --hover:#00e0ff;
+}
+
+/* BASIC RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Segoe UI,Arial,sans-serif;background:var(--secondary);color:var(--text);overflow-x:hidden;}
+
+/* HEADER */
+header{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(135deg, #0a192f 0%, #000 100%);
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+header h1{
+  font-size:3rem;
+  letter-spacing:2px;
+  border-bottom:3px solid var(--primary);
+  display:inline-block;
+  padding-bottom:10px;
+  z-index:2;
+  position:relative;
+}
+header p{
+  margin-top:15px;
+  opacity:0.9;
+  font-size:1.1rem;
+  z-index:2;
+  position:relative;
+}
+header .cta-btn{
+  margin-top:25px;
+  padding:12px 28px;
+  background:var(--primary);
+  color:#000;
+  font-weight:bold;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  transition:.3s;
+  z-index:2;
+  position:relative;
+}
+header .cta-btn:hover{transform:scale(1.05);background:var(--hover);}
+
+/* PARTICLES */
+.particle{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:0.4;
+  background: var(--primary);
+  box-shadow: 0 0 4px var(--primary), 0 0 10px rgba(0,180,255,0.2);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+/* NAVBAR */
+nav{
+  position:sticky;
+  top:0;
+  background:#000;
+  padding:12px;
+  z-index:999;
+  text-align:center;
+  border-bottom:1px solid #222;
+}
+nav a{
+  color:#fff;
+  margin:0 14px;
+  text-decoration:none;
+  font-weight:600;
+  position:relative;
+  transition:.3s;
+}
+nav a:hover{color:var(--primary);}
+nav a.active::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:-5px;
+  width:100%;
+  height:2px;
+  background:var(--primary);
+}
+
+/* SECTIONS */
+section{
+  max-width:1100px;
+  margin:70px auto;
+  background:var(--card);
+  padding:50px 40px;
+  border-radius:18px;
+  position:relative;
+  overflow:hidden;
+  transition:.3s;
+}
+section:hover{transform:translateY(-3px);}
+
+/* FLAME-LIKE LIGHT GLOW FOR SECTIONS */
+section::before{
+  content:"";
+  position:absolute;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background:radial-gradient(circle, rgba(0,180,255,0.35) 0%, rgba(0,180,255,0.15) 30%, transparent 70%);
+  filter:blur(90px) brightness(1.1);
+  animation:flameGlow 10s infinite alternate;
+  z-index:-1;
+  pointer-events:none;
+}
+@keyframes flameGlow{
+  0%{ transform:translate(0px,0px) scale(1) rotate(0deg); opacity:0.4;}
+  25%{ transform:translate(10px,-5px) scale(1.05) rotate(1deg); opacity:0.45;}
+  50%{ transform:translate(-10px,10px) scale(1.08) rotate(-2deg); opacity:0.5;}
+  75%{ transform:translate(5px,-10px) scale(0.95) rotate(1deg); opacity:0.48;}
+  100%{ transform:translate(0px,0px) scale(1) rotate(0deg); opacity:0.4;}
+}
+
+/* BUTTONS */
+.explain-btn, .enroll-btn{
+  margin-top:18px;
+  padding:10px 26px;
+  border:none;
+  border-radius:30px;
+  background:var(--primary);
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+.explain-btn:hover,.enroll-btn:hover{transform:scale(1.05);background:var(--hover);}
+
+/* COURSES */
+.courses{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.courses li{
+  background:#0f0f0f;
+  padding:25px 20px;
+  border-radius:14px;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s;
+  position:relative;
+  overflow:hidden;
+}
+.courses li:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 35px var(--primary);
+}
+
+/* CONTACT FORM */
+form{
+  display:flex;
+  flex-direction:column;
+}
+form input, form textarea{
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #333;
+  background:#111;
+  color:#fff;
+}
+form button{
+  margin-top:10px;
+  background:var(--primary);
+  color:#000;
+  padding:12px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+}
+form button:hover{background:var(--hover);}
+
+/* ADMIN PANEL */
+#adminPanel{
+  display:none;
+  background:#0f0f0f;
+  padding:20px;
+  border-radius:14px;
+}
+#adminPanel table{
+  width:100%;
+  border-collapse:collapse;
+}
+#adminPanel table, #adminPanel th, #adminPanel td{
+  border:1px solid #222;
+}
+#adminPanel th, #adminPanel td{
+  padding:10px;
+  text-align:center;
+  color:#fff;
+}
+
+/* LOGIN MODAL */
+#loginModal{
+  display:none; /* hide by default for normal users */
+  position:fixed;
+  top:0; left:0; width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  display:flex; justify-content:center; align-items:center;
+  z-index:1000;
+}
+#loginModal form{
+  background:#111; padding:30px; border-radius:12px; text-align:center;
+}
+#loginModal input{
+  display:block; width:200px; margin:10px auto; padding:10px; border-radius:8px; border:none;
+}
+#loginModal button{
+  padding:10px 20px; border-radius:8px; border:none; background:var(--primary); cursor:pointer; font-weight:bold;
+}
+#loginModal button:hover{background:var(--hover);}
+
+/* AI CHATBOX */
+#aiChat{
+  position:fixed;
+  bottom:20px; right:20px;
+  width:280px; max-height:400px;
+  background:#111;
+  border:2px solid var(--primary);
+  border-radius:12px;
+  display:flex; flex-direction:column;
+  overflow:hidden; z-index:9999;
+}
+#aiChatHeader{
+  background:var(--primary);
+  color:#000;
+  padding:8px;
+  font-weight:bold;
+  text-align:center;
+  cursor:pointer;
+}
+#aiChatBody{
+  flex:1;
+  padding:8px;
+  overflow-y:auto;
+  font-size:0.9rem;
+}
+#aiChatInput{
+  display:flex;
+  border-top:1px solid #222;
+}
+#aiChatInput input{
+  flex:1;
+  padding:8px;
+  border:none;
+  border-radius:0;
+  background:#222;
+  color:#fff;
+}
+#aiChatInput button{
+  padding:8px 12px;
+  border:none;
+  background:var(--primary);
+  color:#000;
+  cursor:pointer;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  section{margin:50px 15px;padding:35px 25px;}
+  nav a{margin:5px;}
+  #aiChat{width:220px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Momentum Institute of IT & Management</h1>
+  <p>Computer Education for a Better Future</p>
+  <button class="cta-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Enroll Now</button>
+</header>
+
+<nav>
+  <a href="#about" class="active">About</a>
+  <a href="#courses">Courses</a>
+  <a href="#admission">Admission</a>
+  <a href="#payment">Payment</a>
+  <a href="#admin">Admin</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="about">
+<h2>About Us</h2>
+<p>Momentum Computer Center provides quality computer education with practical training, helping students prepare for real-world careers.</p>
+<button class="explain-btn" onclick="speak('यह संस्थान छात्रों को कंप्यूटर शिक्षा और प्रैक्टिकल ट्रेनिंग प्रदान करता है जिससे वे जॉब के लिए तैयार हो सकें')">Explain</button>
+</section>
+
+<section id="courses">
+<h2>Our Courses</h2>
+<ul class="courses">
+<li onclick="enroll('Programming Languages')">Programming Languages</li>
+<li onclick="enroll('Typing Hindi & English')">Typing Hindi & English</li>
+<li onclick="enroll('DCA / ADCA')">DCA / ADCA</li>
+<li onclick="enroll('Tally with GST')">Tally with GST</li>
+<li onclick="enroll('MS Office & Excel')">MS Office & Excel</li>
+<li onclick="enroll('Corel Draw')">Corel Draw</li>
+</ul>
+<button class="explain-btn" onclick="speak('यहाँ प्रोग्रामिंग, टाइपिंग, टैली, और ऑफिस से जुड़े सभी कोर्स उपलब्ध हैं')">Explain</button>
+</section>
+
+<section id="admission">
+<h2>Admission</h2>
+<p>Admissions are open for all courses. Bring your ID proof and two passport-size photos to enroll.</p>
+<button class="explain-btn" onclick="speak('एडमिशन के लिए आधार कार्ड और दो फोटो की आवश्यकता होती है')">Explain</button>
+</section>
+
+<section id="payment">
+<h2>Fee & Payment</h2>
+<ul class="courses">
+<li>Cash</li>
+<li>UPI</li>
+<li>Bank Transfer</li>
+</ul>
+<button class="explain-btn" onclick="speak('फीस कैश, यूपीआई या बैंक ट्रांसफर से जमा की जा सकती है')">Explain</button>
+</section>
+
+<section id="admin">
+<h2>Admin Section</h2>
+<div id="loginModal">
+  <!-- <form id="loginForm">
+    <h3>Admin Login</h3>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form> -->
+</div>
+
+<div id="adminPanel">
+  <h3>Enrollments</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Course</th></tr>
+    </thead>
+    <tbody id="enrollTable"></tbody>
+  </table>
+</div>
+</section>
+
+<section id="contact">
+<h2>Contact Us</h2>
+<p>Address: Pratibha Colony, Aligarh</p>
+<p>Phone: 9458510270</p>
+<form id="contactForm">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="tel" name="phone" placeholder="Phone Number" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <textarea name="course" placeholder="Course Interested"></textarea>
+  <button type="submit">Submit</button>
+</form>
+</section>
+
+<!-- AI Chat Box -->
+<div id="aiChat">
+  <div id="aiChatHeader">AI Chat</div>
+  <div id="aiChatBody"></div>
+  <div id="aiChatInput">
+    <input type="text" id="aiInput" placeholder="Ask me something...">
+    <button onclick="sendAI()">Send</button>
+  </div>
+</div>
+
+<script>
+// ----------------- TTS -----------------
+function speak(text){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='hi-IN'; u.rate=0.7; u.pitch=1;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+// Welcome
+window.onload = () => {
+  speak("स्वागत है मोमेंटम इंस्टीट्यूट में। हमारी वेबसाइट पर आपका स्वागत है।");
+}
+
+// Navbar active
+const navLinks=document.querySelectorAll('nav a');
+const sections=document.querySelectorAll('section');
+window.addEventListener('scroll',()=> {
+  let current='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120) current=s.id;});
+  navLinks.forEach(l=>{l.classList.remove('active'); if(l.getAttribute('href')=='#'+current) l.classList.add('active');});
+});
+
+// Enroll
+const enrollments=[];
+function enroll(course){
+  alert("You clicked enroll for: "+course);
+  document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+}
+
+// Contact form
+document.getElementById('contactForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const form = e.target;
+  const entry = {name: form.name.value, phone: form.phone.value, email: form.email.value, course: form.course.value};
+  enrollments.push(entry);
+  alert("Thank you! Your enrollment is submitted.");
+  form.reset();
+  updateAdminTable();
+});
+
+// Admin Login
+const adminLink = document.querySelector('nav a[href="#admin"]');
+const loginModal = document.getElementById('loginModal');
+const adminPanel = document.getElementById('adminPanel');
+loginModal.style.display='none';
+adminPanel.style.display='none';
+const adminSecretKey = "lavitraAdmin";
+
+adminLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const key = prompt("Enter admin secret key:");
+    if (key === adminSecretKey) {
+        loginModal.style.display='flex';
+    } else {
+        alert("You are not authorized!");
+    }
+});
+
+// Login
+// const loginForm = document.getElementById('loginForm');
+// loginForm.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   const user = document.getElementById('username').value;
+//   const pass = document.getElementById('password').value;
+//   if(user==='admin' && pass==='1234'){
+//     loginModal.style.display='none';
+//     adminPanel.style.display='block';
+//     speak("Hello Kapil Sir, I am AI for this website made by Lavitra");
+//   } else {
+//     alert("Incorrect username or password!");
+//   }
+// });
+
+function updateAdminTable(){
+  const tbody = document.getElementById('enrollTable');
+  tbody.innerHTML='';
+  enrollments.forEach((e,i)=>{
+    const row = document.createElement('tr');
+    row.innerHTML=`<td>${i+1}</td><td>${e.name}</td><td>${e.phone}</td><td>${e.email}</td><td>${e.course}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+// AI Chat
+const aiChatBody = document.getElementById('aiChatBody');
+const aiChatInput = document.getElementById('aiChatInput');
+const aiInput = document.getElementById('aiInput');
+document.getElementById('aiChatHeader').addEventListener('click',()=> {
+  if(aiChatBody.style.display==='none'){aiChatBody.style.display='block'; aiChatInput.style.display='flex';}
+  else{aiChatBody.style.display='none'; aiChatInput.style.display='none';}
+});
+function sendAI(){
+  const text = aiInput.value.toLowerCase();
+  if(!text) return;
+  addAIMessage("You: "+aiInput.value);
+  setTimeout(()=>{addAIMessage("AI: "+getAIReply(text));},500);
+  aiInput.value='';
+}
+function addAIMessage(msg){
+  const div = document.createElement('div');
+  div.textContent = msg;
+  aiChatBody.appendChild(div);
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+}
+function getAIReply(text){
+  if(text.includes("who made you")) return "I am made by Lavitra";
+  if(text.includes("owner")) return "Owner of this website is Mr Kapil Dev Sharma";
+  if(text.includes("courses")) return "We offer Programming, Typing Hindi & English, DCA/ADCA, Tally with GST, MS Office & Excel, Corel Draw";
+  if(text.includes("payment") || text.includes("fees")) return "Payment can be done via Cash, UPI or Bank Transfer";
+  if(text.includes("admission")) return "Admissions are open. Bring ID proof and 2 passport-size photos to enroll";
+  if(text.includes("contact")) return "You can contact us at 9458510270 or visit Pratibha Colony, Aligarh";
+  if(text.includes("about")) return "Momentum Computer Center provides quality computer education with practical training";
+  return "Sorry, I can only answer about courses, payment, admission, contact, owner, or who made me";
+}
+
+// ----------------- PARTICLES -----------------
+const headerElem = document.querySelector('header');
+const particleCount = 30;
+const particles = [];
+
+// Create particles
+for(let i=0; i<particleCount; i++){
+  const p = document.createElement('div');
+  p.classList.add('particle');
+  const size = Math.random() * 6 + 4; // 4px to 10px
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.left = Math.random() * window.innerWidth + 'px';
+  p.style.top = Math.random() * window.innerHeight + 'px';
+  headerElem.appendChild(p);
+  particles.push({
+    el: p,
+    x: parseFloat(p.style.left),
+    y: parseFloat(p.style.top),
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: (Math.random() - 0.5) * 0.5
+  });
+}
+
+// Animate particles
+function animateParticles() {
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+
+    // Bounce off edges
+    if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
+    if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
+
+    p.el.style.left = p.x + 'px';
+    p.el.style.top = p.y + 'px';
+  });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// Mouse interaction: repel particles slightly from mouse
+document.addEventListener('mousemove', (e) => {
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+  particles.forEach(p => {
+    const dx = p.x - mouseX;
+    const dy = p.y - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 100) { // only repel if close
+      p.vx += dx * 0.0005;
+      p.vy += dy * 0.0005;
+    }
+  });
+});
+
+// Optional: adjust particles on window resize
+window.addEventListener('resize', () => {
+  particles.forEach(p => {
+    if (p.x > window.innerWidth) p.x = Math.random() * window.innerWidth;
+    if (p.y > window.innerHeight) p.y = Math.random() * window.innerHeight;
+  });
+});
+</script>
+</body>
+</html>
